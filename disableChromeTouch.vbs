@@ -38,8 +38,17 @@ if inStr(strSplitText(b), "touch-events@2") then
 end if
 next
 
-oShell.Run "cmd /c TASKKILL /F /IM CHROME.EXE /T" 
+set service = GetObject ("winmgmts:")
+chromeRunning = 0
+for each Process in Service.InstancesOf ("Win32_Process")
+	If Process.Name = "chrome.exe" then
+		chromeRunning = 1
+	End If
+next
 
+if chromeRunning = 1 then
+oShell.Run "cmd /c TASKKILL /F /IM CHROME.EXE /T" 
+end if
 
 Set objFile = objFSO.OpenTextFile(localStateFile, ForWriting) 
 
